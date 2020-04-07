@@ -1,10 +1,10 @@
 def POD_LABEL = "java-builder"
 podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
-    containerTemplate(name: 'jnlp', image: 'toyangdon/jnlp-slave-arm64:4.3-1')  
+    containerTemplate(name: 'jnlp', image: 'toyangdon/jnlp-slave-arm64:4.3-v1')  
   ],
-  runAsUser: '0',  //以root用户执行
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'), //实现dockerInDocker
+	//persistentVolumeClaim(mountPath: '/root/.m2', claimName: 'jenkins-build-maven-m2'), //如果想避免每次构建重复下载maven依赖包，可以将.m2目录持久化
     hostPathVolume(mountPath: '/usr/local/sbin', hostPath: '/opt/k8s/bin')  //使用宿主机的docker\kubectl等二进制文件
   ]
   ) {
@@ -26,7 +26,7 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
 			withKubeConfig( credentialsId: 'kubernetes-builder') {
 				dir(kustomize/base/overlays/dev){
 					sh "kustomize edit set image toyangdon/demo:${BUILD_ID}"
-					sh "kustomize build |kubectl apply -f -"
+					sh "kubectl apply -k -n demo-dev"
 				}
 			}
 		}
