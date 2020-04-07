@@ -1,5 +1,5 @@
 def POD_LABEL = "java-builder"
-podTemplate(label: POD_LABEL, cloud: 'dev', containers: [
+podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
     containerTemplate(name: 'jnlp', image: 'toyangdon/jnlp-slave-arm64:4.3-1')
   ],
   volumes: [
