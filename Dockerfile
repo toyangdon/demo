@@ -2,7 +2,7 @@ FROM maven:3-jdk-8-alpine as builder
 
 WORKDIR /root
 COPY src ./
-COPY pom.xm ./
+COPY pom.xml ./
 
 RUN mvn install
 RUN mv target/*.jar target/demo.jar
