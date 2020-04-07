@@ -1,0 +1,5 @@
+bases:
+- ../../base
+patchesStrategicMerge:
+- memorylimit_patch.yaml
+- env_patch.yaml

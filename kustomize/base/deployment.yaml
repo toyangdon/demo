@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: demo
+  name: demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+        deployment: demo
+    spec:
+      containers:
+        image: toyangdon/demo:1
+        name: demo
+        ports:
+        - containerPort: 8080
