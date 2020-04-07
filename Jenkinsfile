@@ -4,7 +4,7 @@ podTemplate(label: POD_LABEL, cloud: 'dev', containers: [
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'), //实现dockerInDocker
-    hostPathVolume(mountPath: '/usr/local/sbin', hostPath: '/opt/k8s/bin')  //使用宿主机的docker和kubectl二进制文件
+    hostPathVolume(mountPath: '/usr/local/sbin', hostPath: '/opt/k8s/bin')  //使用宿主机的docker\kubectl等二进制文件
   ]
   ) {
 
@@ -25,8 +25,10 @@ podTemplate(label: POD_LABEL, cloud: 'dev', containers: [
 		}
 		stage('部署服务'){
 			withKubeConfig( credentialsId: 'kubernetes-builder') {
-				dir(kustomize)
-				kubectl apply -k
+				dir(kustomize/base/overlays/dev){
+					kustomize edit set image toyangdon/demo:${BUILD_ID}
+					kustomize build |kubectl apply -f -
+				}
 			}
 		}
     }

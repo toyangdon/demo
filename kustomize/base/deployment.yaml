@@ -15,7 +15,7 @@ spec:
         app: demo
         deployment: demo
     spec:
-      containers:
+    - containers:
         image: toyangdon/demo:1
         name: demo
         ports:
