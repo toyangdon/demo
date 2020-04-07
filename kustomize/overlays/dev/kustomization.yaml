@@ -3,3 +3,4 @@ bases:
 patchesStrategicMerge:
 - memorylimit_patch.yaml
 - env_patch.yaml
+namespace: demo-dev

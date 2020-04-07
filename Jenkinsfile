@@ -1,6 +1,6 @@
 def POD_LABEL = "java-builder"
 podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
-    containerTemplate(name: 'jnlp', image: 'toyangdon/jnlp-slave-arm64:4.3-v1')  
+    containerTemplate(name: 'jnlp', image: 'toyangdon/jnlp-slave-maven-arm64:4.3-1')  
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'), //实现dockerInDocker
@@ -13,10 +13,10 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
         stage('下载代码') {
             git  'https://github.com/toyangdon/demo.git'
         }
-		stage('编译代码'){	
+		stage('编译源码'){	
 			 sh 'mvn install'
 		}
-	   stage('构建镜像'){	
+	   stage('镜像'){	
 			 sh "docker build -t  toyangdon/demo:${BUILD_ID} ."
 		}
 		stage('推送镜像'){	
@@ -26,8 +26,8 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
 			}
 		}
 		stage('部署服务'){
-			withKubeConfig( credentialsId: 'kubernetes-builder') {
-				dir(kustomize/base/overlays/dev){
+			withKubeConfig( credentialsId: 'kubernetes-builder', serverUrl: 'https://kubernetes.default') {
+				dir(kustomize/overlays/dev){
 					sh "kustomize edit set image toyangdon/demo:${BUILD_ID}"
 					sh "kubectl apply -k -n demo-dev"
 				}
