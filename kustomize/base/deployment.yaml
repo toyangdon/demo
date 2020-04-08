@@ -15,8 +15,8 @@ spec:
         app: demo
         deployment: demo
     spec:
-    - containers:
-        image: toyangdon/demo:1
+      containers:
+      - image: toyangdon/demo:1
         name: demo
         ports:
         - containerPort: 8080
