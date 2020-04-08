@@ -3,10 +3,8 @@ kind: Deployment
 metadata:
   name: demo
 spec:
+  replicas: 3
   template:
-    metadata:
-      labels:
-        version: v1
     spec:
       containers:
         - name: demo
