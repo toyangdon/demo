@@ -21,7 +21,7 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
 		}
 		stage('推送镜像'){	
 			 withCredentials([usernamePassword(credentialsId: 'docker_hub', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
-				sh "docker login -u ${DOCKER_HUB_USERNAME} -p${DOCKER_HUB_PASSWORD}"
+				sh "docker login -u ${DOCKER_HUB_USERNAME} -p${DOCKER_HUB_PASSWORD} registry.cn-hangzhou.aliyuncs.com"
 				sh "docker push registry.cn-hangzhou.aliyuncs.com/toyangdon/demo:${BUILD_ID}"
 			}
 		}
