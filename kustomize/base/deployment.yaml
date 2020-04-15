@@ -16,7 +16,7 @@ spec:
         deployment: demo
     spec:
       containers:
-      - image: toyangdon/demo:1
+      - image: registry.cn-hangzhou.aliyuncs.com/toyangdon/demo:1
         name: demo
         ports:
         - containerPort: 8080
