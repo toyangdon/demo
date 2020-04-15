@@ -16,7 +16,7 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
 		stage('编译源码'){	
 			 sh 'mvn install'
 		}
-	   stage('镜像'){	
+	   stage('构建镜像'){	
 			 sh "docker build -t  registry.cn-hangzhou.aliyuncs.com/toyangdon/demo:${BUILD_ID} ."
 		}
 		stage('推送镜像'){	
