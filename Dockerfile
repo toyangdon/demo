@@ -1,4 +1,4 @@
-FROM openjdk:8-alpine
+FROM registry.cn-hangzhou.aliyuncs.com/openjdk:8-alpine
 
 COPY target/*.jar /root/demo.jar
 

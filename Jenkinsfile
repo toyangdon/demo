@@ -1,6 +1,6 @@
 def POD_LABEL = "java-builder"
 podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
-    containerTemplate(name: 'jnlp', image: 'toyangdon/jnlp-slave-maven-arm64:4.3-v2')  
+    containerTemplate(name: 'jnlp', image: 'registry.cn-hangzhou.aliyuncs.com/toyangdon/jnlp-slave-maven-arm64:4.3-v2')  
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'), //实现dockerInDocker
@@ -17,7 +17,7 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
 			 sh 'mvn install'
 		}
 	   stage('镜像'){	
-			 sh "docker build -t  toyangdon/demo:${BUILD_ID} ."
+			 sh "docker build -t  registry.cn-hangzhou.aliyuncs.com/toyangdon/demo:${BUILD_ID} ."
 		}
 		stage('推送镜像'){	
 			 withCredentials([usernamePassword(credentialsId: 'docker_hub', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
@@ -28,7 +28,7 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
 		stage('部署服务'){
 			withKubeConfig( credentialsId: 'kubernetes-builder', serverUrl: 'https://kubernetes.default') {
 				dir('kustomize/overlays/dev'){
-					sh "kustomize edit set image toyangdon/demo:${BUILD_ID}"
+					sh "kustomize edit set image registry.cn-hangzhou.aliyuncs.com/toyangdon/demo:${BUILD_ID}"
 					sh "kustomize build | kubectl apply -f -"
 				}
 			}
