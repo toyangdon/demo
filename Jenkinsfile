@@ -16,18 +16,18 @@ podTemplate(label: POD_LABEL, cloud: 'kubernetes', containers: [
 	    sh 'mvn install'
 	}
 	stage('构建镜像'){	
-	    sh "docker build -t  registry.cn-hangzhou.aliyuncs.com/toyangdon/demo:${BUILD_ID} ."
+	    sh "docker build -t  dockerhub.ccyunchina.com/toyangdon/demo:${BUILD_ID} ."
 	}
 	stage('推送镜像'){	
 	    withCredentials([usernamePassword(credentialsId: 'docker_hub', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
-	        sh "docker login -u ${DOCKER_HUB_USERNAME} -p${DOCKER_HUB_PASSWORD} registry.cn-hangzhou.aliyuncs.com"
-		sh "docker push registry.cn-hangzhou.aliyuncs.com/toyangdon/demo:${BUILD_ID}"
+	        sh "docker login -u ${DOCKER_HUB_USERNAME} -p${DOCKER_HUB_PASSWORD} dockerhub.ccyunchina.com"
+		sh "docker push dockerhub.ccyunchina.com/toyangdon/demo:${BUILD_ID}"
 	    }
 	}
 	stage('部署服务'){
 	    withKubeConfig( credentialsId: 'kubernetes-builder', serverUrl: 'https://kubernetes.default') {
 	        dir('kustomize/overlays/dev'){
-		    sh "kustomize edit set image registry.cn-hangzhou.aliyuncs.com/toyangdon/demo:${BUILD_ID}"
+		    sh "kustomize edit set image dockerhub.ccyunchina.com/toyangdon/demo:${BUILD_ID}"
 		    sh "kustomize build | kubectl apply -f -"
 		}
 	    }
